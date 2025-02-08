@@ -1,0 +1,58 @@
+import java.io.*;
+import java.nio.file.*;
+
+public class Main {  // Ensure the file is named Main.java if running online
+    private static final String FILE_PATH = "example.txt";
+
+    public static void main(String[] args) {
+        try {
+            // Writing to a file
+            writeToFile("Hello, this is a file handling demonstration in Java.\n");
+
+            // Reading from the file
+            System.out.println("File Content:");
+            readFile();
+
+            // Modifying the file
+            modifyFile("Hello", "Hi");
+
+            // Reading again to check modification
+            System.out.println("\nModified File Content:");
+            readFile();
+
+        } catch (IOException e) {
+            System.err.println("An error occurred: " + e.getMessage());
+        }
+    }
+
+    // Method to write to a file
+    public static void writeToFile(String content) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
+            writer.write(content);
+            System.out.println("Data written to file successfully.");
+        }
+    }
+
+    // Method to read from a file
+    public static void readFile() throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+        }
+    }
+
+    // Method to modify the file content
+    public static void modifyFile(String oldWord, String newWord) throws IOException {
+        Path path = Paths.get(FILE_PATH);
+        if (!Files.exists(path)) {
+            System.err.println("File does not exist. Modification aborted.");
+            return;
+        }
+        String content = new String(Files.readAllBytes(path));
+        content = content.replace(oldWord, newWord);
+        Files.write(path, content.getBytes());
+        System.out.println("File modified successfully.");
+    }
+}
